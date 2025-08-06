@@ -51,7 +51,6 @@ fn is_safe(levels: &[i32]) -> bool {
     increasing || decreasing
 }
 
-
 fn is_safe_with_one_removal(levels: &[i32]) -> bool {
     for i in 0..levels.len() {
         let mut modified_levels = levels.to_vec();
