@@ -16,32 +16,51 @@ fn main() {
             .filter_map(|num| num.parse().ok())
             .collect::<Vec<i32>>();
 
-        let mut increasing = true;
-        let mut decreasing = true;
-        let mut safe = true;
-
-
-        for i in 0..levels.len() - 1 {
-            let diff = (levels[i + 1] - levels[i]).abs();
-
-            if diff < 1 || diff > 3 {
-                safe = false;
-                break;
-            }
-
-            if levels[i] < levels[i + 1] {
-                increasing = false;
-            }
-
-            if levels[i] > levels[i + 1] {
-                decreasing = false;
-            }
-        }
-
-        if safe && (increasing || decreasing) {
+        if is_safe(&levels) {
             safe_count += 1;
+        } else {
+            if is_safe_with_one_removal(&levels) {
+                safe_count += 1;
+            }
         }
     }
 
     println!("Safe Count: {}", safe_count);
+}
+
+fn is_safe(levels: &[i32]) -> bool {
+    let mut increasing = true;
+    let mut decreasing = true;
+
+    for i in 0..levels.len() - 1 {
+        let diff = (levels[i + 1] - levels[i]).abs();
+
+        if diff < 1 || diff > 3 {
+            return false;
+        }
+
+        if levels[i] < levels[i + 1] {
+            increasing = false;
+        }
+
+        if levels[i] > levels[i + 1] {
+            decreasing = false;
+        }
+    }
+
+    increasing || decreasing
+}
+
+
+fn is_safe_with_one_removal(levels: &[i32]) -> bool {
+    for i in 0..levels.len() {
+        let mut modified_levels = levels.to_vec();
+        modified_levels.remove(i);
+
+        if is_safe(&modified_levels) {
+            return true;
+        }
+    }
+
+    false
 }
